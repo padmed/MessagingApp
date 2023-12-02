@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { user } from "../models";
+import { saveInAllUsers, saveInLocalStrg } from "../utils/helpers";
 
 const currentUserSlice = createSlice({
   name: "currentUser",
@@ -26,6 +27,7 @@ export const loginUser = (username, password) => {
       } else {
         const key = ack.soul;
         dispatch(authUser(key));
+        saveInLocalStrg(username, key);
         console.log("Authentication succesfull");
       }
     });
@@ -40,6 +42,8 @@ export const registerUser = (username, password) => {
       } else {
         const key = ack.pub;
         dispatch(authUser(key));
+        saveInAllUsers(key);
+        saveInLocalStrg(username, key);
         console.log("User created succesfully", ack.pub);
       }
     });
