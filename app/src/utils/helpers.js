@@ -1,12 +1,18 @@
-// const bcrypt = require("bcrypt");
+import { gun } from "../models";
 
-// export const hashString = async (str) => {
-//   const saltRounds = 10;
+export const saveInAllUsers = (key) => {
+  let alias;
+  gun
+    .user(key)
+    .get("alias")
+    .once((a) => {
+      alias = a;
+    });
 
-//   try {
-//     const hash = await bcrypt.hash(str, saltRounds);
-//     return hash;
-//   } catch (error) {
-//     console.error("Error while hashing password", error);
-//   }
-// };
+  gun.get("users").set({ alias, key });
+};
+
+export const saveInLocalStrg = (username, key) => {
+  const authUserStr = JSON.stringify({ username, key });
+  window.localStorage.setItem("authedUser", authUserStr);
+};
