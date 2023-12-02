@@ -1,8 +1,10 @@
 import { useState } from "react";
 import AuthForm from "../components/AuthForm";
-import { user } from "../models";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../reducers/currentUser";
 
 const LoginUser = () => {
+  const dispatch = useDispatch();
   const [formState, setFormState] = useState({
     username: "",
     password: "",
@@ -15,13 +17,7 @@ const LoginUser = () => {
   const handleLogin = () => {
     const { username, password } = formState;
 
-    user.auth(username, password, (ack) => {
-      if (ack.err) {
-        console.error("Authentication failed", ack.err);
-      } else {
-        console.log("Authentication succesfull");
-      }
-    });
+    dispatch(loginUser(username, password));
   };
 
   return (

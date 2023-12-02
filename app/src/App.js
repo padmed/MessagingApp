@@ -1,10 +1,7 @@
-// import { useEffect, useState, useReducer } from "react";
-// import Gun from "gun";
-
-import { useEffect } from "react";
 import RegisterUser from "./views/RegisterUser";
 import LoginUser from "./views/LoginUser";
-
+import { useSelector } from "react-redux";
+import LogoutButton from "./components/LogoutButton";
 // // initialize gun locally
 // const gun = Gun({
 //   peers: ["http://localhost:3030/gun"],
@@ -102,11 +99,18 @@ import LoginUser from "./views/LoginUser";
 // }
 
 const App = () => {
-  useEffect(() => {});
+  const currentUser = useSelector((state) => state.currentUser);
+
   return (
     <>
-      <RegisterUser />
-      <LoginUser />
+      {!currentUser ? (
+        <>
+          <RegisterUser />
+          <LoginUser />
+        </>
+      ) : (
+        <LogoutButton />
+      )}
     </>
   );
 };

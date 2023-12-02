@@ -1,8 +1,10 @@
 import AuthForm from "../components/AuthForm";
-import { user } from "../models";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { registerUser } from "../reducers/currentUser";
 
 const RegisterUser = () => {
+  const dispatch = useDispatch();
   const [formState, setFormState] = useState({
     username: "",
     password: "",
@@ -12,22 +14,15 @@ const RegisterUser = () => {
     setFormState({ ...formState, [name]: value });
   };
 
-  const registerUser = async () => {
+  const handleRegistration = async () => {
     const { username, password } = formState;
-
-    user.create(username, password, (ack) => {
-      if (ack.err) {
-        console.log(ack.err);
-      } else {
-        console.log("User created succesfully", ack.pub);
-      }
-    });
+    dispatch(registerUser(username, password));
   };
 
   return (
     <AuthForm
       buttonText={"Sign up"}
-      onSubmit={registerUser}
+      onSubmit={handleRegistration}
       onInputChange={handleInputChange}
       formState={formState}
     ></AuthForm>
