@@ -3,4 +3,4 @@ import "gun/sea";
 
 export const gun = Gun({ peers: ["http://localhost:3030/gun"] });
 
-export const user = gun.user();
+export const user = gun.user().recall({ sessionStorage: true });

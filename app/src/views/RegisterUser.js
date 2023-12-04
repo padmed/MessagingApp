@@ -25,7 +25,7 @@ const RegisterUser = () => {
       onSubmit={handleRegistration}
       onInputChange={handleInputChange}
       formState={formState}
-    ></AuthForm>
+    />
   );
 };
 

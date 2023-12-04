@@ -7,10 +7,9 @@ const usersSlice = createSlice({
   reducers: {
     saveUser: (state, action) => {
       const key = action.payload.key;
-
       const isDuplicate = state.find((user) => user.key === key);
 
-      if (!isDuplicate) {
+      if (!isDuplicate && action.payload.alias) {
         return [...state, action.payload];
       }
     },
