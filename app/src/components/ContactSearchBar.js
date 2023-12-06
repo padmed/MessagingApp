@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { sendContactRequest } from "../services";
+import { sendContactRequest } from "../services/contactRequests";
 
 const ContactSearchBar = () => {
   const currentUser = useSelector((state) => state.currentUser); // Holds the alias and the keys of a user

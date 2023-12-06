@@ -1,4 +1,4 @@
-import { gun } from "../models/index";
+import { gun, user } from "../models/index";
 import "gun/sea";
 
 const getContactReqCert = (reciever) => {
@@ -26,4 +26,13 @@ export const sendContactRequest = (requestObj) => {
         { opt: { cert: certificate } },
       );
   });
+};
+
+export const putCertificate = (cert) => {
+  user
+    .get("certs")
+    .get("contactRequestsCert")
+    .put(cert, () => {
+      console.log("Contact requests certificate saved");
+    });
 };

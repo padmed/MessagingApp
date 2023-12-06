@@ -1,11 +1,10 @@
 import { SEA } from "gun";
-import { user } from "./index";
 import "gun/sea";
+import { putCertificate } from "../services/contactRequests";
 
 export const allowContactRequests = async (currentUser) => {
   const certificateOwner = currentUser;
   if (certificateOwner) {
-    // const pubKey = certificateOwner.keys.pub;
     const keys = {
       ...certificateOwner.keys,
       pub: certificateOwner.keys.pub.slice(1),
@@ -17,11 +16,6 @@ export const allowContactRequests = async (currentUser) => {
       keys,
     );
 
-    user
-      .get("certs")
-      .get("contactRequestsCert")
-      .put(cert, () => {
-        console.log("Contact requests certificate saved");
-      });
+    putCertificate(cert);
   }
 };
