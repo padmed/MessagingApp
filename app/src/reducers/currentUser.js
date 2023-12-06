@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { user } from "../models";
-import { saveInAllUsers, saveInLocalStrg } from "../utils/helpers";
+import { saveInLocalStrg } from "../utils/helpers";
 import { allowContactRequests } from "../models/certificates";
+import { saveInUsersNode } from "../services/users";
 
 const currentUserSlice = createSlice({
   name: "currentUser",
@@ -52,7 +53,7 @@ export const registerUser = (alias, password) => {
       } else {
         const key = "~" + ack.pub;
         // Saves a registered user under 'users' node
-        saveInAllUsers(alias, key);
+        saveInUsersNode(alias, key);
         console.log("User created succesfully", ack.pub);
 
         // After the registration user is logged in the app
