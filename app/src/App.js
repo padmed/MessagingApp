@@ -6,7 +6,7 @@ import ContactSearchBar from "./components/ContactSearchBar";
 import { initUsers } from "./reducers/users";
 import { authUser } from "./reducers/currentUser";
 import { useEffect } from "react";
-import { gun } from "./models";
+import { user } from "./models";
 
 const App = () => {
   const currentUser = useSelector((state) => state.currentUser);
@@ -26,12 +26,12 @@ const App = () => {
   useEffect(() => {
     const initRequests = async () => {
       if (currentUser) {
-        console.log(currentUser);
-        const publicKey = currentUser.keys.pub;
-        await gun
-          .get("users")
-          .get(publicKey)
-          .once((m) => console.log(m));
+        user
+          .get("contactRequests")
+          .once()
+          .map((reqs) => {
+            console.log(reqs);
+          });
       }
     };
 

@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { user } from "../models";
 import { saveInAllUsers, saveInLocalStrg } from "../utils/helpers";
+import { allowContactRequests } from "../models/certificates";
 
 const currentUserSlice = createSlice({
   name: "currentUser",
@@ -22,7 +23,7 @@ export default currentUserSlice.reducer;
 
 export const loginUser = (alias, password) => {
   return async (dispatch) => {
-    user.auth(alias, password, (ack) => {
+    user.auth(alias, password, async (ack) => {
       if (ack.err) {
         console.error("Authentication failed", ack.err);
       } else {
@@ -32,6 +33,9 @@ export const loginUser = (alias, password) => {
         };
         // If the page is refreshed user is still in the app
         saveInLocalStrg(currentUserObject);
+
+        // Sets certificate for exchanging contact requests
+        await allowContactRequests(currentUserObject);
         console.log("Authentication succesfull");
 
         dispatch(authUser(currentUserObject));
