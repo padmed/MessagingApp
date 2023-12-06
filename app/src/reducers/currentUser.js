@@ -7,8 +7,8 @@ const currentUserSlice = createSlice({
   initialState: null,
   reducers: {
     authUser: (state, action) => {
-      const key = action.payload;
-      return key;
+      const { alias, key } = action.payload;
+      return { alias, key };
     },
     logoutUser: () => {
       return null;
@@ -19,32 +19,36 @@ const currentUserSlice = createSlice({
 export const { authUser, logoutUser } = currentUserSlice.actions;
 export default currentUserSlice.reducer;
 
-export const loginUser = (username, password) => {
-  return (dispatch) => {
-    user.auth(username, password, (ack) => {
+// Update block so that it saves the keys as the currentUser
+export const loginUser = (alias, password) => {
+  return async (dispatch) => {
+    console.log(alias, password);
+    user.auth(alias, password, (ack) => {
       if (ack.err) {
         console.error("Authentication failed", ack.err);
       } else {
+        console.log(ack.sea);
         const key = ack.soul;
-        dispatch(authUser(key));
-        saveInLocalStrg(username, key);
+        const alias = user.is.alias;
+        dispatch(authUser({ alias, key }));
+        saveInLocalStrg(alias, key);
         console.log("Authentication succesfull");
       }
     });
   };
 };
 
-export const registerUser = (username, password) => {
-  return (dispatch) => {
-    user.create(username, password, (ack) => {
+export const registerUser = (alias, password) => {
+  return async (dispatch) => {
+    user.create(alias, password, (ack) => {
       if (ack.err) {
         console.log(ack.err);
       } else {
-        const key = ack.pub;
-        dispatch(authUser(key));
-        saveInAllUsers(key);
-        saveInLocalStrg(username, key);
+        const key = "~" + ack.pub;
+        saveInAllUsers(alias, key);
         console.log("User created succesfully", ack.pub);
+
+        dispatch(loginUser(alias, password));
       }
     });
   };
