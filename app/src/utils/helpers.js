@@ -1,5 +1,6 @@
 import { gun } from "../models";
 
+// Saves a user under 'users' node
 export const saveInAllUsers = async (alias, key) => {
   await gun
     .get("users")
@@ -13,7 +14,7 @@ export const saveInAllUsers = async (alias, key) => {
     });
 };
 
-export const saveInLocalStrg = (alias, key) => {
-  const authUserStr = JSON.stringify({ alias, key });
+export const saveInLocalStrg = (userObj) => {
+  const authUserStr = JSON.stringify(userObj);
   window.localStorage.setItem("authedUser", authUserStr);
 };
