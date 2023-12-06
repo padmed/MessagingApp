@@ -15,20 +15,22 @@ const App = () => {
   useEffect(() => {
     dispatch(initUsers());
 
+    // If the page is refreshed a user is logged in the app anyway
     const authedUserStr = window.localStorage.getItem("authedUser");
-    const authedUser = JSON.parse(authedUserStr);
-    if (authedUser) {
-      const { key, alias } = authedUser;
-      dispatch(authUser({ key, alias }));
+    const authedUserObj = JSON.parse(authedUserStr);
+    if (authedUserObj) {
+      dispatch(authUser(authedUserObj));
     }
   }, []);
 
   useEffect(() => {
     const initRequests = async () => {
       if (currentUser) {
+        console.log(currentUser);
+        const publicKey = currentUser.keys.pub;
         await gun
           .get("users")
-          .get(currentUser.key)
+          .get(publicKey)
           .once((m) => console.log(m));
       }
     };

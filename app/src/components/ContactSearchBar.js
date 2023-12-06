@@ -3,13 +3,14 @@ import { useSelector } from "react-redux";
 import { gun } from "../models";
 
 const ContactSearchBar = () => {
-  const currentUser = useSelector((state) => state.currentUser);
-  const users = useSelector((state) => state.users);
-  const [usersFound, setUsersFound] = useState([]);
+  const currentUser = useSelector((state) => state.currentUser); // Holds the alias and the keys of a user
+  const users = useSelector((state) => state.users); // Holds all existing users
+  const [usersFound, setUsersFound] = useState([]); // Filter state, used to find contacts from search bar
 
   const handleInputChange = (e) => {
     const searchValue = e.target.value;
     const filteredUsers = users.filter((user) => {
+      // Checks if the object indeed holds the user data
       if (user.alias) {
         return user.alias.includes(searchValue);
       }
@@ -18,14 +19,15 @@ const ContactSearchBar = () => {
     setUsersFound(filteredUsers);
   };
 
-  const handleSendRequest = async (key, alias) => {
-    const sender = { key: currentUser.key, alias: currentUser.alias };
-    const reciever = { key, alias };
+  const handleSendRequest = async (contactKey, contactAlias) => {
+    const sender = { key: currentUser.keys.pub, alias: currentUser.alias };
+    const reciever = { key: contactKey, alias: contactAlias };
     const requestObj = { sender, reciever, status: "pending" };
 
+    // Puts the request in 'users/reciever/contactRequests' node
     gun
       .get("users")
-      .get(key)
+      .get(reciever.key)
       .get("contactRequests")
       .put(requestObj, (ack) => {
         if (ack.err) {

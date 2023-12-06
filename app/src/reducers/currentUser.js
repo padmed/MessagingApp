@@ -7,8 +7,9 @@ const currentUserSlice = createSlice({
   initialState: null,
   reducers: {
     authUser: (state, action) => {
-      const { alias, key } = action.payload;
-      return { alias, key };
+      // Object contains the alias and the keys of a user
+      const currentUserObject = action.payload;
+      return currentUserObject;
     },
     logoutUser: () => {
       return null;
@@ -19,20 +20,21 @@ const currentUserSlice = createSlice({
 export const { authUser, logoutUser } = currentUserSlice.actions;
 export default currentUserSlice.reducer;
 
-// Update block so that it saves the keys as the currentUser
 export const loginUser = (alias, password) => {
   return async (dispatch) => {
-    console.log(alias, password);
     user.auth(alias, password, (ack) => {
       if (ack.err) {
         console.error("Authentication failed", ack.err);
       } else {
-        console.log(ack.sea);
-        const key = ack.soul;
-        const alias = user.is.alias;
-        dispatch(authUser({ alias, key }));
-        saveInLocalStrg(alias, key);
+        const currentUserObject = {
+          alias,
+          keys: { ...ack.sea, pub: "~" + ack.sea.pub },
+        };
+        // If the page is refreshed user is still in the app
+        saveInLocalStrg(currentUserObject);
         console.log("Authentication succesfull");
+
+        dispatch(authUser(currentUserObject));
       }
     });
   };
@@ -45,9 +47,11 @@ export const registerUser = (alias, password) => {
         console.log(ack.err);
       } else {
         const key = "~" + ack.pub;
+        // Saves a registered user under 'users' node
         saveInAllUsers(alias, key);
         console.log("User created succesfully", ack.pub);
 
+        // After the registration user is logged in the app
         dispatch(loginUser(alias, password));
       }
     });
