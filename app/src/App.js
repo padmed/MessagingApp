@@ -6,6 +6,7 @@ import ContactSearchBar from "./components/ContactSearchBar";
 import { initUsers } from "./reducers/users";
 import { authUser } from "./reducers/currentUser";
 import { useEffect } from "react";
+import { gun } from "./models";
 
 const App = () => {
   const currentUser = useSelector((state) => state.currentUser);
@@ -17,9 +18,23 @@ const App = () => {
     const authedUserStr = window.localStorage.getItem("authedUser");
     const authedUser = JSON.parse(authedUserStr);
     if (authedUser) {
-      dispatch(authUser(authedUser.key));
+      const { key, alias } = authedUser;
+      dispatch(authUser({ key, alias }));
     }
   }, []);
+
+  useEffect(() => {
+    const initRequests = async () => {
+      if (currentUser) {
+        await gun
+          .get("users")
+          .get(currentUser.key)
+          .once((m) => console.log(m));
+      }
+    };
+
+    initRequests();
+  }, [currentUser]);
 
   return (
     <>
