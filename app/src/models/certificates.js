@@ -12,7 +12,7 @@ export const allowContactRequests = async (currentUser) => {
 
     const cert = await SEA.certify(
       "*",
-      { "#": { "*": "contactRequests" } },
+      { "#": { "*": "contactRequests", "+": "*" } },
       keys,
     );
 
