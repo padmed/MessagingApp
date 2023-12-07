@@ -5,26 +5,60 @@ const getContactReqCert = (reciever) => {
   return gun.get(reciever.key).get("certs").get("contactRequestsCert").then();
 };
 
+const putInSentNode = (requestObj, certificate) => {
+  const { reciever, sender } = requestObj;
+  gun
+    .get(sender.key)
+    .get("contactRequests")
+    .get("sent")
+    .get(reciever.key)
+    .put(
+      requestObj,
+      (ack) => {
+        if (ack.err) {
+          console.log(
+            "Error while saving contact request in current user node",
+            ack.err,
+          );
+        } else {
+          console.log("Contact request saved in current user node");
+        }
+      },
+      { opt: { cert: certificate } },
+    );
+};
+
+const putInInboxNode = (requestObj, certificate) => {
+  const { reciever, sender } = requestObj;
+  gun
+    .get(reciever.key)
+    .get("contactRequests")
+    .get("inbox")
+    .get(sender.key)
+    .put(
+      requestObj,
+      (ack) => {
+        if (ack.err) {
+          console.log(
+            "Error while saving contact request in reciever's node",
+            ack.err,
+          );
+        } else {
+          console.log("Contact request saved in reciever's node");
+        }
+      },
+      { opt: { cert: certificate } },
+    );
+};
+
 export const sendContactRequest = (requestObj) => {
   const { reciever } = requestObj;
   const certificatePromise = getContactReqCert(reciever);
-
   certificatePromise.then((certificate) => {
-    // Puts the request in 'user/contactRequests' node
-    gun
-      .get(reciever.key)
-      .get("contactRequests")
-      .put(
-        requestObj,
-        (ack) => {
-          if (ack.err) {
-            console.log("Error while sending contact request", ack.err);
-          } else {
-            console.log("Contact request sent", ack);
-          }
-        },
-        { opt: { cert: certificate } },
-      );
+    // Puts the request in 'sender/contactRequests/sent' node
+    putInSentNode(requestObj, certificate);
+    // Puts the request in 'reciever/contactRequests/inbox' node
+    putInInboxNode(requestObj, certificate);
   });
 };
 
