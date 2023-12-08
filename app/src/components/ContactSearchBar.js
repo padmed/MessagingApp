@@ -20,9 +20,19 @@ const ContactSearchBar = () => {
   };
 
   const handleSendRequest = async (contactKey, contactAlias) => {
-    const sender = { key: currentUser.keys.pub, alias: currentUser.alias };
-    const reciever = { key: contactKey, alias: contactAlias };
-    const requestObj = { sender, reciever, status: "pending" };
+    const sender = currentUser.keys.pub;
+    const senderAlias = currentUser.alias;
+    const reciever = contactKey;
+    const recieverAlias = contactAlias;
+    const date = Date.now();
+    const requestObj = {
+      sender,
+      senderAlias,
+      reciever,
+      recieverAlias,
+      status: "pending",
+      date,
+    };
 
     sendContactRequest(requestObj);
   };

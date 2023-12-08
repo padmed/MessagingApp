@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { gun } from "../models";
+import "gun/lib/open.js";
 
 const usersSlice = createSlice({
   name: "users",
@@ -23,11 +24,11 @@ export const { saveUser } = usersSlice.actions;
 export const initUsers = () => {
   return async (dispatch) => {
     // Gets all users from the 'users' node
-    await gun
-      .get("users")
-      .once()
-      .map((user) => {
+    gun.get("users").open((data) => {
+      const users = Object.values(data);
+      users.map((user) => {
         dispatch(saveUser(user));
       });
+    });
   };
 };

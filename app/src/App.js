@@ -6,7 +6,8 @@ import ContactSearchBar from "./components/ContactSearchBar";
 import { initUsers } from "./reducers/users";
 import { authUser } from "./reducers/currentUser";
 import { useEffect } from "react";
-import { user } from "./models";
+import ConactRequests from "./components/ContactRequests";
+import { getContactRequests } from "./reducers/contactRequests";
 
 const App = () => {
   const currentUser = useSelector((state) => state.currentUser);
@@ -14,6 +15,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(initUsers());
+    dispatch(getContactRequests());
 
     // If the page is refreshed a user is logged in the app anyway
     const authedUserStr = window.localStorage.getItem("authedUser");
@@ -22,21 +24,6 @@ const App = () => {
       dispatch(authUser(authedUserObj));
     }
   }, []);
-
-  useEffect(() => {
-    const initRequests = async () => {
-      if (currentUser) {
-        user
-          .get("contactRequests")
-          .once()
-          .map((reqs) => {
-            console.log(reqs);
-          });
-      }
-    };
-
-    initRequests();
-  }, [currentUser]);
 
   return (
     <>
@@ -49,6 +36,7 @@ const App = () => {
         <>
           <LogoutButton />
           <ContactSearchBar />
+          <ConactRequests />
         </>
       )}
     </>

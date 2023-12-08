@@ -2,16 +2,16 @@ import { gun, user } from "../models/index";
 import "gun/sea";
 
 const getContactReqCert = (reciever) => {
-  return gun.get(reciever.key).get("certs").get("contactRequestsCert").then();
+  return gun.get(reciever).get("certs").get("contactRequestsCert").then();
 };
 
 const putInSentNode = (requestObj, certificate) => {
   const { reciever, sender } = requestObj;
   gun
-    .get(sender.key)
+    .get(sender)
     .get("contactRequests")
     .get("sent")
-    .get(reciever.key)
+    .get(reciever)
     .put(
       requestObj,
       (ack) => {
@@ -31,10 +31,10 @@ const putInSentNode = (requestObj, certificate) => {
 const putInInboxNode = (requestObj, certificate) => {
   const { reciever, sender } = requestObj;
   gun
-    .get(reciever.key)
+    .get(reciever)
     .get("contactRequests")
     .get("inbox")
-    .get(sender.key)
+    .get(sender)
     .put(
       requestObj,
       (ack) => {
