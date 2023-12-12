@@ -1,6 +1,6 @@
 import { SEA } from "gun";
 import "gun/sea";
-import { putCertificate } from "../services/contactRequests";
+import { putCertificate } from "../services/contacts";
 
 export const allowContactRequests = async (currentUser) => {
   const certificateOwner = currentUser;
