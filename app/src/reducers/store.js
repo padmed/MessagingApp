@@ -1,10 +1,12 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import currentUser from "./currentUser";
 import users from "./users";
+import contactRequests from "./contactRequests";
 
 const rootReducer = combineReducers({
-  currentUser: currentUser,
-  users: users,
+  currentUser,
+  users,
+  contactRequests,
 });
 
 const store = configureStore({
