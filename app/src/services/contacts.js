@@ -5,10 +5,10 @@ const getContactReqCert = (reciever) => {
   return gun.get(reciever).get("certs").get("contactRequestsCert").then();
 };
 
-const putInSentNode = (requestObj, certificate) => {
+const putInSentNode = async (requestObj, certificate) => {
   const { reciever, sender } = requestObj;
-  gun
-    .get(sender)
+  await gun
+    .user(sender)
     .get("contactRequests")
     .get("sent")
     .get(reciever)
@@ -28,10 +28,11 @@ const putInSentNode = (requestObj, certificate) => {
     );
 };
 
-const putInInboxNode = (requestObj, certificate) => {
+const putInInboxNode = async (requestObj, certificate) => {
   const { reciever, sender } = requestObj;
-  gun
-    .get(reciever)
+
+  await gun
+    .user(reciever)
     .get("contactRequests")
     .get("inbox")
     .get(sender)
