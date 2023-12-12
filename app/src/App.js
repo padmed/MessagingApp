@@ -7,7 +7,7 @@ import { initUsers } from "./reducers/users";
 import { authUser } from "./reducers/currentUser";
 import { useEffect } from "react";
 import ConactRequests from "./components/ContactRequests";
-import { getContactRequests } from "./reducers/contactRequests";
+import { clearRequests, getContactRequests } from "./reducers/contactRequests";
 
 const App = () => {
   const currentUser = useSelector((state) => state.currentUser);
@@ -15,7 +15,6 @@ const App = () => {
 
   useEffect(() => {
     dispatch(initUsers());
-    dispatch(getContactRequests());
 
     // If the page is refreshed a user is logged in the app anyway
     const authedUserStr = window.localStorage.getItem("authedUser");
@@ -25,6 +24,12 @@ const App = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (currentUser) {
+      dispatch(clearRequests());
+      dispatch(getContactRequests());
+    }
+  }, [currentUser]);
   return (
     <>
       {!currentUser ? (
